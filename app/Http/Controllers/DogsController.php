@@ -22,10 +22,10 @@ class DogsController extends Controller
   public function store(Request $request)
   {
       $this->validate($request, [
-        'title' => 'required|unique:products|max:191',
+        'breed' => 'bail|required|unique:dogs|regex:/^[a-zA-Z -]+$/u|max:191',
       ]);
 
-      $dog = Dog::create($request->all());
+      $dog = Dog::create(['breed' => $request->input('breed')]);
 
       return response()->json($dog, 201);
   }

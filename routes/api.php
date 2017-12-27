@@ -13,6 +13,6 @@
 
 Route::get('dogs', 'DogsController@index');
 
-Route::get('dogs/{breed}', 'DogsController@show')->where('breed', '[A-Za-z]+');
+Route::get('dogs/{breed}', 'DogsController@show')->where('breed', '[A-Za-z -]+');
 
-Route::post('dogs','DogsController@store')->where('breed', '[A-Za-z]+');
+Route::post('dogs','DogsController@store');
