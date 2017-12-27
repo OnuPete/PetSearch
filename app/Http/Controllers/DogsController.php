@@ -16,6 +16,10 @@ class DogsController extends Controller
 
   public function store(Request $request)
   {
+      $this->validate($request, [
+        'title' => 'required|unique:products|max:191',
+      ]);
+
       $dog = Dog::create($request->all());
 
       return response()->json($dog, 201);
