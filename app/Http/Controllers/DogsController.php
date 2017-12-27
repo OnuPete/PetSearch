@@ -8,10 +8,15 @@ use App\Dog;
 
 class DogsController extends Controller
 {
+  public function index() {
+    return Dog::all();
+  }
 
-  public function show(Dog $breed)
+  public function show($breed)
   {
-      return $breed;
+      $dog = Dog::where('breed', 'LIKE', '%'.$breed.'%')->get();
+
+      return response()->json($dog, 200);
   }
 
   public function store(Request $request)
