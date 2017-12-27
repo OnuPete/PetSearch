@@ -9,9 +9,9 @@ use App\Dog;
 class DogsController extends Controller
 {
 
-  public function show(Dog $dog)
+  public function show(Dog $breed)
   {
-      return $dog;
+      return $breed;
   }
 
   public function store(Request $request)

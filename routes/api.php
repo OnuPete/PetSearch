@@ -1,7 +1,5 @@
 <?php
 
-use Illuminate\Http\Request;
-
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -13,12 +11,6 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
-});
-
-Route::get('dogs', 'DogsController@index');
-
-Route::get('dogs/{product}', 'DogsController@show');
+Route::get('dogs/{breed}', 'DogsController@show')->where('breed', '[A-Za-z]+');;
 
 Route::post('dogs','DogsController@store');
