@@ -21,7 +21,7 @@ class CreateDogsTable extends Migration
 
         $csv = resource_path()."/assets/sql/dog-breeds.csv";
 
-        $query = sprintf("LOAD DATA LOCAL INFILE '%s' INTO TABLE `dogs` FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '\"' ESCAPED BY '\"' LINES TERMINATED BY '\\n' IGNORE 0 LINES (`breed`)", addslashes($csv));
+        $query = sprintf("LOAD DATA LOCAL INFILE '%s' INTO TABLE `dogs` FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '\"' ESCAPED BY '\"' LINES TERMINATED BY '\\r\\n' IGNORE 0 LINES (`breed`, @created_at, @updated_at) SET created_at=NOW(),updated_at=null", addslashes($csv));
 
         $pdo = DB::connection()->getpdo();
 
