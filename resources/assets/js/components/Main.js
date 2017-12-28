@@ -1,10 +1,18 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
+import { Provider } from 'react-redux';
+import { createStore, applyMiddleware } from 'redux';
+import thunk from 'redux-thunk';
+
+const createStoreWithMiddleware = applyMiddleware(thunk)(createStore);
+const store = createStoreWithMiddleware(reducers);
 
 export default class Main extends Component {
   render() {
       return (
-        <div>Start</div>
+        <Provider store={store}>
+          <div>Start</div>
+        </Provider>
       );
   }
 }
