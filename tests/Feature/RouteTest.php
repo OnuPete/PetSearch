@@ -14,28 +14,24 @@ class RouteTest extends TestCase
      *
      * @return void
      */
-    public function testGetDogs()
-    {
-        $response = $this->get('/api/dogs');
-
-        $response
-            ->assertStatus(200)
-            ->assertJsonStructure([
-                '*' => [
-                  'id', 'breed', 'created_at', 'updated_at'
-                ]
-            ]);
-    }
 
     public function testGetDog()
     {
-        $this->get('/api/dogs/aire')
+        $this->get('/api/search/dogs?breed=aire')
           ->assertStatus(200)
           ->assertJsonFragment(['breed' => 'Airedale']);
 
-        $this->get('/api/dogs/aired c')
+        $this->get('/api/search/dogs?breed=aired c')
           ->assertStatus(200)
           ->assertJsonFragment(['breed' => 'Long Haired Chihuahua']);
+
+        $this->get('/api/search/dogs?breed=Great Dane')
+          ->assertStatus(200)
+          ->assertJsonStructure([]);
+
+        $this->get('/api/search/dogs?breed=ared')
+          ->assertStatus(200)
+          ->assertJsonStructure([]);
     }
 
     public function testPostDog()
@@ -52,5 +48,9 @@ class RouteTest extends TestCase
           ->assertJsonFragment([
               'message' => 'The given data was invalid.',
           ]);
+
+      $this
+          ->json('POST', '/api/dogs', ['breed' => 'airedale'])
+          ->assertJsonFragment(['breed' => 'Airedale']);
     }
 }

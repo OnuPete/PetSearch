@@ -11,8 +11,6 @@
 |
 */
 
-Route::get('dogs', 'DogsController@index');
-
-Route::get('dogs/{breed}', 'DogsController@show')->where('breed', '[A-Za-z -]+');
+Route::get('search/dogs', 'DogsController@show');
 
 Route::post('dogs','DogsController@store');
