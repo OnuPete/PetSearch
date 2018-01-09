@@ -3,13 +3,18 @@ import filterBreed from '../util/filter';
 
 const initialState = {
   dogWishList: [],
-  dogSearch: [],
+  dogSearch: [{breed: 'Search a breed.'}],
   currentDog: '',
   highlightedDog: '',
 }
 
 export default function reducers(state = initialState, action) {
   switch(action.type) {
+    case types.INIT_SEARCH:
+      return {
+        ...state,
+        dogSearch: [{ breed: 'Search a breed.'}]
+      }
     case types.ADD_TO_WISHLIST:
       return {
         ...state,
@@ -28,7 +33,6 @@ export default function reducers(state = initialState, action) {
       }
     case types.SEARCH_CURRENT_DOGS:
       const dogSearch = filterBreed(state.dogSearch, action.breed);
-
       return {
         ...state,
         currentDog: action.breed,
@@ -37,7 +41,7 @@ export default function reducers(state = initialState, action) {
     case types.SEARCH_DOG_REQUEST:
       return {
         ...state,
-        dogSearch: ['Loading...']
+        dogSearch: [{ breed: 'Loading...' }]
       }
     case types.SEARCH_DOG_SUCCESS:
       return {
@@ -48,7 +52,7 @@ export default function reducers(state = initialState, action) {
     case types.SEARCH_DOG_FAILURE:
       return {
         ...state,
-        dogSearch: ['Check your spelling.']
+        dogSearch: [{ breed: 'Check your spelling.' }]
       }
 
     default:

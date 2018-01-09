@@ -1,6 +1,14 @@
 import 'isomorphic-fetch';
+
 import * as types from './types';
+import cachedFetch from '../util/fetch';
 import filterBreed from '../util/filter';
+
+export function searchInit() {
+  return {
+    type: types.INIT_SEARCH
+  }
+}
 
 export function addToWishList(breed) {
   return {
@@ -50,34 +58,46 @@ export function searchDogFailure() {
 
 export function searchChange(breed) {
   return (dispatch, getState) => {
-    const dogSearch = filterBreed(getState().dogSearch,breed);
-    console.log('ayayayyyayayyay', dogSearch);
-    if (dogSearch.length > 0) return dispatch(searchCurrentDogs(breed));
+    if (breed.length === 0) return dispatch(searchInit());
     else {
       dispatch(searchDogRequest());
-      const search = breed.length > 0? `/${breed}`: '';
-      return fetch(`/api/dogs${search}`)
+      return cachedFetch(`/api/search/dogs?breed=${breed}`)
         .then(res => {
           if(!res.ok) throw new Error();
           return res.json();
         })
-        .then(data => {
-          if (data.length === 0) {
-            return fetch('/api/dogs', { method: 'post', body: JSON.stringify({breed}) });
-          } else return data;
-        })
-        .then(res => {
-          if(res.hasOwnProperty('ok') && !res.ok) throw new Error(res.statusText);
-          else if (res.hasOwnProperty('ok') && res.ok) return res.json();
-          else return res;
-        })
         .then(dogs => {
+          if(dogs.length === 0) throw Error();
           dispatch(searchDogSuccess(breed, dogs));
         })
         .catch((e) => {
           dispatch(searchDogFailure())
         });
     }
+  };
+}
 
+export function postDog(breed) {
+  return (dispatch, getState) => {
+    if (breed.length === 0) return dispatch(searchInit());
+    else {
+      dispatch(searchDogRequest());
+      return cachedFetch('/api/dogs', {
+        method: 'post',
+        body: JSON.stringify({breed})
+      })
+        .then(res => {
+          if(!res.ok) throw new Error();
+          return res.json();
+        })
+        .then(dogs => {
+          // dispatch(addToWishList(dogs[0].breed));
+          if(dogs.length === 0) throw Error();
+          dispatch(searchDogSuccess(breed, dogs));
+        })
+        .catch((e) => {
+          dispatch(searchDogFailure())
+        });
+    }
   };
 }
